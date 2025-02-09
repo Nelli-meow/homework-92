@@ -1,17 +1,20 @@
-import express = require('express');
+import express from "express";
 import expressWS from  'express-ws';
 import cors from 'cors';
 import{WebSocket} from 'ws';
 import mongoose from "mongoose";
 import config from "./config";
+import UsersRouter from "./routers/Users";
 
 
 const app = express();
 expressWS(app);
-
 const port = 8000;
 
+
+app.use(express.json());
 app.use(cors());
+app.use('/users', UsersRouter);
 
 const router = express.Router();
 
