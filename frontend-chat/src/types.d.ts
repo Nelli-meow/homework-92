@@ -17,6 +17,11 @@ export interface IUser {
   role: string;
   image?: string | null;
   displayName: string;
+  isOnline: boolean;
+}
+
+export interface IOnlineUsers {
+  onlineUsers: IUser[];
 }
 
 export interface RegisterResponse {

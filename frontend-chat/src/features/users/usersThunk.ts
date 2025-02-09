@@ -92,3 +92,14 @@ export const logout = createAsyncThunk<void, void, {state: RootState}>(
     await axiosApi.delete('/users/sessions', {headers: {'Authorization': token}});
   }
 );
+
+export const fetchAllUsers = createAsyncThunk(
+  'users/fetchAllUsers',
+  async () => {
+    const response = await axiosApi<IUser>('/users');
+
+    console.log(response.data);
+
+    return response.data || [];
+  }
+);

@@ -1,10 +1,12 @@
 import { GlobalError, IUser, ValidationError } from '../../types';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store.ts';
-import { googleLogin, login, register } from './usersThunk.ts';
+import { fetchAllUsers, googleLogin, login, register } from './usersThunk.ts';
 
 interface UsersState {
   user: IUser | null;
+  allUsers: IUser[];
+  fetchUsers: boolean;
   registerLoading: boolean;
   registerError: ValidationError | null;
   loginError: GlobalError | null;
@@ -13,6 +15,8 @@ interface UsersState {
 
 const initialState: UsersState = {
   user: null,
+  allUsers: [],
+  fetchUsers: false,
   registerError: null,
   registerLoading: false,
   loginError: null,
@@ -22,7 +26,8 @@ const initialState: UsersState = {
 export const selectUser = (state: RootState) => state.users.user;
 export const selectRegisterError = (state: RootState) => state.users.registerError;
 export const selectLoginError = (state: RootState) => state.users.loginError;
-
+export const selectOnlineUsers = (state: RootState) =>
+  state.users.allUsers.filter(user => user.isOnline);
 
 export const usersSlice = createSlice({
   name: 'users',
@@ -69,6 +74,16 @@ export const usersSlice = createSlice({
       .addCase(googleLogin.rejected, (state, {payload: error}) => {
         state.loginLoading = false;
         state.loginError = error || null;
+      })
+
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.fetchUsers = true;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, {payload: users}) => {
+        state.allUsers.push(users);
+      })
+      .addCase(fetchAllUsers.rejected, (state) => {
+        state.fetchUsers = false;
       });
   }
 });

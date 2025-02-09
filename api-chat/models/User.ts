@@ -57,6 +57,7 @@ const UserSchema = new Schema<
     },
     isOnline: {
         type: Boolean,
+        default: false,
     },
     token: {
         type: String,

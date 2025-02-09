@@ -40,6 +40,13 @@ UsersRouter.post("/google",  imagesUpload.single('image'), async (req, res, next
         let user = await User.findOne({googleID: id});
 
         if(!user) {
+            res.status(401).send({error: 'User is not found. Google login failed'});
+            return;
+        }
+
+        user.isOnline = !user.isOnline;
+
+        if(!user) {
             user = new User({
                 username: email,
                 password: crypto.randomUUID(),
@@ -77,6 +84,9 @@ UsersRouter.post('/register' , imagesUpload.single('image'), async (req, res) =>
             image:  req.file ? 'images' + req.file.filename : null,
         });
 
+
+        user.isOnline = !user.isOnline;
+
         user.generateToken();
 
         await user.save();
@@ -99,6 +109,8 @@ UsersRouter.post('/sessions', async (req, res) => {
             res.status(400).send({error: 'Username Not Found'});
             return;
         }
+
+        user.isOnline = !user.isOnline;
 
         const isMatch = await user.checkPassword(req.body.password);
 
