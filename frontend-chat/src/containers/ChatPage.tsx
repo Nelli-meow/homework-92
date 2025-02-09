@@ -1,6 +1,7 @@
 import { useAppSelector } from '../app/hooks.ts';
 import { selectUser } from '../features/users/UsersSlice.ts';
 import OnlineUsers from '../components/OnlineUsers/OnlineUsers.tsx';
+import ChatForm from '../components/ChatForm/ChatForm.tsx';
 
 
 const ChatPage = () => {
@@ -24,8 +25,11 @@ const ChatPage = () => {
         <div className="border border-gray-300 rounded-md p-3 text-center">
           <h2 className="text-xl font-semibold">Chat Room</h2>
 
-          <div>
-
+          <div className="flex flex-col h-screen">
+            <div className="flex-1 overflow-auto p-4">
+              <div>messages</div>
+            </div>
+            <ChatForm/>
           </div>
         </div>
       </div>
