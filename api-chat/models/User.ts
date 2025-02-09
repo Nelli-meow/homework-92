@@ -55,6 +55,9 @@ const UserSchema = new Schema<
         type: String,
         default: null,
     },
+    isOnline: {
+        type: Boolean,
+    },
     token: {
         type: String,
         required: true,

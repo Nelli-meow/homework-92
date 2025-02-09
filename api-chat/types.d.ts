@@ -7,4 +7,5 @@ export interface UserFields {
     googleId: string;
     email: string;
     image: string;
+    isOnline: boolean;
 }
