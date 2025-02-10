@@ -143,6 +143,8 @@ UsersRouter.delete('/sessions', auth, async (req, res) => {
 
         if (user) {
             user.generateToken();
+
+            user.isOnline = false;
             await user.save();
 
             res.send({message: 'Success logout'});

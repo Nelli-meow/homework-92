@@ -4,9 +4,7 @@ const MainPage = () => {
 
   return (
     <>
-      <div className="container">
         <ChatPage/>
-      </div>
     </>
   );
 };

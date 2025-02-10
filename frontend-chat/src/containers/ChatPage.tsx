@@ -2,17 +2,16 @@ import { useAppSelector } from '../app/hooks.ts';
 import { selectUser } from '../features/users/UsersSlice.ts';
 import OnlineUsers from '../components/OnlineUsers/OnlineUsers.tsx';
 import ChatForm from '../components/ChatForm/ChatForm.tsx';
+import Messages from '../components/Messages/Messages.tsx';
 
 
 const ChatPage = () => {
   const user = useAppSelector(selectUser);
 
   return (
-    <div className="flex h-screen">
-
+    <div className="flex h-screen w-screen-98vw overflow-hidden">
       <aside className="w-64 bg-gray-100 text-gray-900 p-4 shadow-lg flex-shrink-0">
         <h2 className="text-lg font-semibold mb-4 border-b pb-2">Online Users</h2>
-
         {user && user.isOnline ? (
           <OnlineUsers/>
         ) : (
@@ -20,15 +19,15 @@ const ChatPage = () => {
         )}
       </aside>
 
-      <div className="flex-1 bg-white p-6 overflow-y-auto">
+      <div className="flex flex-col flex-1 h-full w-full overflow-hidden">
+        <div className="border border-gray-300 rounded-md flex flex-col h-full w-full">
+          <h2 className="text-xl font-semibold text-center p-3">Chat Room</h2>
 
-        <div className="border border-gray-300 rounded-md p-3 text-center">
-          <h2 className="text-xl font-semibold">Chat Room</h2>
+          <div className="flex-1 overflow-y-auto px-4">
+            <Messages/>
+          </div>
 
-          <div className="flex flex-col h-screen">
-            <div className="flex-1 overflow-auto p-4">
-              <div>messages</div>
-            </div>
+          <div className="p-3 w-full">
             <ChatForm/>
           </div>
         </div>
