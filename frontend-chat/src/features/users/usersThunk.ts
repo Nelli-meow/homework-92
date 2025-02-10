@@ -96,9 +96,7 @@ export const logout = createAsyncThunk<void, void, {state: RootState}>(
 export const fetchAllUsers = createAsyncThunk(
   'users/fetchAllUsers',
   async () => {
-    const response = await axiosApi<IUser>('/users');
-
-    console.log(response.data);
+    const response = await axiosApi<IUser>('/users/online');
 
     return response.data || [];
   }

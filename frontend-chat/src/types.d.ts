@@ -20,10 +20,6 @@ export interface IUser {
   isOnline: boolean;
 }
 
-export interface IOnlineUsers {
-  onlineUsers: IUser[];
-}
-
 export interface RegisterResponse {
   user: IUser;
   message: string;

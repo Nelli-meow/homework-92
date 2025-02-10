@@ -26,8 +26,6 @@ const initialState: UsersState = {
 export const selectUser = (state: RootState) => state.users.user;
 export const selectRegisterError = (state: RootState) => state.users.registerError;
 export const selectLoginError = (state: RootState) => state.users.loginError;
-export const selectOnlineUsers = (state: RootState) =>
-  state.users.allUsers.filter(user => user.isOnline);
 
 export const usersSlice = createSlice({
   name: 'users',

@@ -12,7 +12,7 @@ const client = new OAuth2Client(config.google.clientID);
 
 const UsersRouter = express.Router();
 
-UsersRouter.post("/google",  imagesUpload.single('image'), async (req, res, next) => {
+UsersRouter.post("/google", imagesUpload.single('image'), async (req, res, next) => {
     try {
         const ticket = await client.verifyIdToken({
                 idToken: req.body.credential,
@@ -22,7 +22,7 @@ UsersRouter.post("/google",  imagesUpload.single('image'), async (req, res, next
 
         const payload = ticket.getPayload();
 
-        if(!payload) {
+        if (!payload) {
             res.status(401).send({error: 'Invalid credentials. Google login failed'});
             return;
         }
@@ -32,21 +32,19 @@ UsersRouter.post("/google",  imagesUpload.single('image'), async (req, res, next
         const displayName = payload.name;
         const image = payload.picture;
 
-        if(!email) {
+        if (!email) {
             res.status(401).send({error: 'email is not found. Google login failed'});
             return;
         }
 
         let user = await User.findOne({googleID: id});
 
-        if(!user) {
+        if (!user) {
             res.status(401).send({error: 'User is not found. Google login failed'});
             return;
         }
 
-        user.isOnline = !user.isOnline;
-
-        if(!user) {
+        if (!user) {
             user = new User({
                 username: email,
                 password: crypto.randomUUID(),
@@ -55,6 +53,8 @@ UsersRouter.post("/google",  imagesUpload.single('image'), async (req, res, next
                 image: image,
             })
         }
+
+        user.isOnline = !user.isOnline;
 
         user.generateToken();
         await user.save();
@@ -65,23 +65,24 @@ UsersRouter.post("/google",  imagesUpload.single('image'), async (req, res, next
     }
 });
 
-UsersRouter.get('/', async (req, res) => {
+UsersRouter.get('/online', async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find({isOnline: true});
+
         res.status(200).send(users);
     } catch (error) {
         res.status(400).send({error: 'An error occurred'});
     }
 });
 
-UsersRouter.post('/register' , imagesUpload.single('image'), async (req, res) => {
+UsersRouter.post('/register', imagesUpload.single('image'), async (req, res) => {
 
     try {
         const user = new User({
             username: req.body.username,
             password: req.body.password,
             displayName: req.body.displayName,
-            image:  req.file ? 'images' + req.file.filename : null,
+            image: req.file ? 'images' + req.file.filename : null,
         });
 
 

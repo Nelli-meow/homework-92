@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface MessageFromUser {
   username: string;
@@ -10,39 +10,31 @@ interface IncomingMessage {
   payload: MessageFromUser | MessageFromUser[];
 }
 
-const Messages = () => {
-  const ws = useRef<WebSocket | null>(null);
+interface MessagesProps {
+  ws: WebSocket | null;
+}
+
+const Messages: React.FC<MessagesProps> = ({ ws }) => {
   const [messages, setMessages] = useState<MessageFromUser[]>([]);
 
   useEffect(() => {
-    ws.current = new WebSocket('ws://localhost:8000/chat');
+    if (!ws) return;
 
-    ws.current.onopen = () => console.log('Connected to WebSocket');
-
-    ws.current.onmessage = (event) => {
+    ws.onmessage = (event) => {
       const decodedMessage = JSON.parse(event.data) as IncomingMessage;
 
+
       if (decodedMessage.type === 'MESSAGES_HISTORY') {
-        const messagesHistory = Array.isArray(decodedMessage.payload)
-          ? decodedMessage.payload
-          : [decodedMessage.payload];
-
-        setMessages(messagesHistory);
+        setMessages(Array.isArray(decodedMessage.payload) ? decodedMessage.payload : [decodedMessage.payload]);
       } else if (decodedMessage.type === 'NEW_MESSAGE') {
-        const newMessages = Array.isArray(decodedMessage.payload)
-          ? decodedMessage.payload
-          : [decodedMessage.payload];
-
-        setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        setMessages((prev) => [...prev, ...(Array.isArray(decodedMessage.payload) ? decodedMessage.payload : [decodedMessage.payload])]);
       }
     };
 
-    ws.current.onclose = () => console.log('Disconnected from WebSocket');
-
     return () => {
-      ws.current?.close();
+      ws.onmessage = null;
     };
-  }, []);
+  }, [ws]);
 
   return (
     <div className="flex-1 overflow-auto p-4">
